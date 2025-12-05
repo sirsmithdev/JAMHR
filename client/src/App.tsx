@@ -12,6 +12,7 @@ import Kiosk from "@/pages/Kiosk";
 import Login from "@/pages/Login";
 import Employees from "@/pages/Employees";
 import Incidents from "@/pages/Incidents";
+import Performance from "@/pages/Performance";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/kiosk" component={Kiosk} />
       <Route path="/employees" component={Employees} />
       <Route path="/incidents" component={Incidents} />
+      <Route path="/performance" component={Performance} />
       <Route component={NotFound} />
     </Switch>
   );

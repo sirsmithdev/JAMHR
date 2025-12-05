@@ -13,7 +13,8 @@ import {
   Clock,
   CalendarDays,
   MonitorSmartphone,
-  AlertTriangle
+  AlertTriangle,
+  Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -52,6 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/payroll", icon: Calculator, label: "Payroll & Tax" },
     { href: "/time", icon: Clock, label: "Time & Attendance" },
     { href: "/scheduling", icon: CalendarDays, label: "Scheduling" },
+    { href: "/performance", icon: Star, label: "Performance" },
     { href: "/leave", icon: Calendar, label: "Leave Management" },
     { href: "/incidents", icon: AlertTriangle, label: "Incident Reporting" },
     { href: "/documents", icon: FileText, label: "Documents" },
