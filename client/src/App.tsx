@@ -14,6 +14,8 @@ import Employees from "@/pages/Employees";
 import Incidents from "@/pages/Incidents";
 import Performance from "@/pages/Performance";
 import Leave from "@/pages/Leave";
+import Documents from "@/pages/Documents";
+import Compliance from "@/pages/Compliance";
 
 function Router() {
   return (
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/incidents" component={Incidents} />
       <Route path="/performance" component={Performance} />
       <Route path="/leave" component={Leave} />
+      <Route path="/documents" component={Documents} />
+      <Route path="/compliance" component={Compliance} />
       <Route component={NotFound} />
     </Switch>
   );
