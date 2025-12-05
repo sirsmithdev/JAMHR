@@ -11,6 +11,7 @@ import Scheduling from "@/pages/Scheduling";
 import Kiosk from "@/pages/Kiosk";
 import Login from "@/pages/Login";
 import Employees from "@/pages/Employees";
+import Incidents from "@/pages/Incidents";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/scheduling" component={Scheduling} />
       <Route path="/kiosk" component={Kiosk} />
       <Route path="/employees" component={Employees} />
+      <Route path="/incidents" component={Incidents} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -12,7 +12,8 @@ import {
   Briefcase,
   Clock,
   CalendarDays,
-  MonitorSmartphone
+  MonitorSmartphone,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -52,6 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/time", icon: Clock, label: "Time & Attendance" },
     { href: "/scheduling", icon: CalendarDays, label: "Scheduling" },
     { href: "/leave", icon: Calendar, label: "Leave Management" },
+    { href: "/incidents", icon: AlertTriangle, label: "Incident Reporting" },
     { href: "/documents", icon: FileText, label: "Documents" },
     { href: "/compliance", icon: Briefcase, label: "Labor Laws" },
   ];
