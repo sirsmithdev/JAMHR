@@ -9,15 +9,19 @@ import Payroll from "@/pages/Payroll";
 import TimeManagement from "@/pages/TimeManagement";
 import Scheduling from "@/pages/Scheduling";
 import Kiosk from "@/pages/Kiosk";
+import Login from "@/pages/Login";
+import Employees from "@/pages/Employees";
 
 function Router() {
   return (
     <Switch>
+      <Route path="/login" component={Login} />
       <Route path="/" component={Dashboard} />
       <Route path="/payroll" component={Payroll} />
       <Route path="/time" component={TimeManagement} />
       <Route path="/scheduling" component={Scheduling} />
       <Route path="/kiosk" component={Kiosk} />
+      <Route path="/employees" component={Employees} />
       <Route component={NotFound} />
     </Switch>
   );
