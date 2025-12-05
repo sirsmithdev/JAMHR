@@ -9,7 +9,10 @@ import {
   LogOut, 
   Menu,
   Calculator,
-  Briefcase
+  Briefcase,
+  Clock,
+  CalendarDays,
+  MonitorSmartphone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -46,6 +49,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/employees", icon: Users, label: "Employees" },
     { href: "/payroll", icon: Calculator, label: "Payroll & Tax" },
+    { href: "/time", icon: Clock, label: "Time & Attendance" },
+    { href: "/scheduling", icon: CalendarDays, label: "Scheduling" },
     { href: "/leave", icon: Calendar, label: "Leave Management" },
     { href: "/documents", icon: FileText, label: "Documents" },
     { href: "/compliance", icon: Briefcase, label: "Labor Laws" },
@@ -73,6 +78,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             active={location === item.href}
           />
         ))}
+        
+        <div className="mt-6 pt-6 border-t border-sidebar-border/30 px-3">
+           <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase mb-2 px-2">Apps</p>
+           <NavItem href="/kiosk" icon={MonitorSmartphone} label="Kiosk Mode" active={location === "/kiosk"} />
+        </div>
       </div>
 
       <div className="p-4 border-t border-sidebar-border/30">
