@@ -13,6 +13,7 @@ import Login from "@/pages/Login";
 import Employees from "@/pages/Employees";
 import Incidents from "@/pages/Incidents";
 import Performance from "@/pages/Performance";
+import Leave from "@/pages/Leave";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/employees" component={Employees} />
       <Route path="/incidents" component={Incidents} />
       <Route path="/performance" component={Performance} />
+      <Route path="/leave" component={Leave} />
       <Route component={NotFound} />
     </Switch>
   );
