@@ -54,12 +54,18 @@
 
                 <!-- CTA Buttons -->
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('login') }}" class="hidden sm:inline-flex text-gray-600 hover:text-gray-900 transition-colors">
-                        Sign In
-                    </a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20">
-                        Start Free Trial
-                    </a>
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20">
+                            Go to Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="hidden sm:inline-flex text-gray-600 hover:text-gray-900 transition-colors">
+                            Sign In
+                        </a>
+                        <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20">
+                            Start Free Trial
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -87,12 +93,21 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/30">
-                            Start 14-Day Free Trial
-                            <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/30">
+                                Go to Dashboard
+                                <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/30">
+                                Start 14-Day Free Trial
+                                <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        @endauth
                         <a href="#demo" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
                             <svg class="w-5 h-5 mr-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
@@ -613,12 +628,21 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-emerald-900 bg-white hover:bg-gray-100 transition-colors shadow-lg">
-                            Start Free Trial
-                            <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-emerald-900 bg-white hover:bg-gray-100 transition-colors shadow-lg">
+                                Go to Dashboard
+                                <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-emerald-900 bg-white hover:bg-gray-100 transition-colors shadow-lg">
+                                Start Free Trial
+                                <svg class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        @endauth
                         <a href="{{ route('contact') }}" class="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-white bg-white/20 hover:bg-white/30 transition-colors border border-white/30">
                             Schedule Demo
                         </a>
