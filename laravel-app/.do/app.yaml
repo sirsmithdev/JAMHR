@@ -1,0 +1,154 @@
+# DigitalOcean App Platform Specification
+# Documentation: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+
+name: jamhr
+
+# Region - Choose the closest to Jamaica for lower latency
+region: nyc
+
+# Features
+features:
+  - buildpack-stack=ubuntu-22
+
+# Services
+services:
+  - name: web
+    # Use Dockerfile for custom build
+    dockerfile_path: Dockerfile
+
+    # Or use buildpack (uncomment if not using Dockerfile)
+    # environment_slug: php
+    # build_command: |
+    #   composer install --no-dev --optimize-autoloader
+    #   npm ci && npm run build
+    #   php artisan config:cache
+    #   php artisan route:cache
+    #   php artisan view:cache
+
+    github:
+      repo: sirsmithdev/JAMHR
+      branch: main
+      deploy_on_push: true
+
+    # HTTP configuration
+    http_port: 8080
+
+    # Instance configuration
+    instance_count: 1
+    instance_size_slug: professional-xs
+
+    # Health check
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+
+    # Environment variables
+    envs:
+      - key: APP_NAME
+        value: "JamHR"
+      - key: APP_ENV
+        value: "production"
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: "${APP_URL}"
+        type: GENERAL
+      - key: APP_KEY
+        value: "${APP_KEY}"
+        type: SECRET
+
+      # Database - Use DigitalOcean Managed Database
+      - key: DB_CONNECTION
+        value: "pgsql"
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: "${db.DATABASE_URL}"
+
+      # Session & Cache - Use Redis
+      - key: SESSION_DRIVER
+        value: "redis"
+      - key: CACHE_STORE
+        value: "redis"
+      - key: QUEUE_CONNECTION
+        value: "redis"
+      - key: REDIS_URL
+        scope: RUN_TIME
+        value: "${redis.REDIS_URL}"
+
+      # Logging
+      - key: LOG_CHANNEL
+        value: "stderr"
+      - key: LOG_LEVEL
+        value: "error"
+
+      # Mail configuration (set these in App Platform dashboard)
+      - key: MAIL_MAILER
+        value: "smtp"
+      - key: MAIL_HOST
+        value: "${MAIL_HOST}"
+        type: GENERAL
+      - key: MAIL_PORT
+        value: "${MAIL_PORT}"
+        type: GENERAL
+      - key: MAIL_USERNAME
+        value: "${MAIL_USERNAME}"
+        type: SECRET
+      - key: MAIL_PASSWORD
+        value: "${MAIL_PASSWORD}"
+        type: SECRET
+      - key: MAIL_FROM_ADDRESS
+        value: "${MAIL_FROM_ADDRESS}"
+        type: GENERAL
+      - key: MAIL_FROM_NAME
+        value: "JamHR"
+
+  # Worker for background jobs (optional - uncomment if needed)
+  # - name: worker
+  #   dockerfile_path: Dockerfile
+  #   github:
+  #     repo: sirsmithdev/JAMHR
+  #     branch: main
+  #   instance_count: 1
+  #   instance_size_slug: professional-xs
+  #   run_command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+  #   envs:
+  #     # Copy same envs from web service
+
+# Database
+databases:
+  - name: db
+    engine: PG
+    version: "16"
+    size: db-s-1vcpu-1gb
+    num_nodes: 1
+
+# Redis for caching and queues (uncomment if using managed Redis)
+# Note: DigitalOcean App Platform doesn't have native Redis support,
+# use DigitalOcean Managed Database Redis separately
+
+# Jobs (one-off commands like migrations)
+jobs:
+  - name: migrate
+    kind: PRE_DEPLOY
+    dockerfile_path: Dockerfile
+    github:
+      repo: sirsmithdev/JAMHR
+      branch: main
+    run_command: php artisan migrate --force
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: "${db.DATABASE_URL}"
+
+# Static site for assets (optional - for CDN)
+# static_sites:
+#   - name: assets
+#     github:
+#       repo: sirsmithdev/JAMHR
+#       branch: main
+#     build_command: npm ci && npm run build
+#     output_dir: public/build
