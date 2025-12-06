@@ -15,6 +15,7 @@ use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\HiringController;
 use App\Http\Controllers\TerminationController;
 use App\Http\Controllers\DisciplinaryController;
+use App\Http\Controllers\PayslipController;
 use Illuminate\Support\Facades\Route;
 
 // Redirect root to dashboard or login
@@ -39,6 +40,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payroll/{payroll}/paid', [PayrollController::class, 'markPaid'])->name('payroll.paid');
     Route::get('/payroll-calculator', [PayrollController::class, 'calculator'])->name('payroll.calculator');
     Route::post('/payroll-calculator', [PayrollController::class, 'calculate'])->name('payroll.calculate');
+
+    // Payslips
+    Route::get('/payslips/bulk-email', [PayslipController::class, 'bulkEmailForm'])->name('payslips.bulk-email');
+    Route::post('/payslips/bulk-email', [PayslipController::class, 'bulkEmail'])->name('payslips.bulk-email.send');
+    Route::post('/payslips/generate-batch', [PayslipController::class, 'generateBatch'])->name('payslips.generate-batch');
+    Route::get('/payslips/{payroll}', [PayslipController::class, 'show'])->name('payslips.show');
+    Route::get('/payslips/{payroll}/download', [PayslipController::class, 'download'])->name('payslips.download');
+    Route::get('/payslips/{payroll}/view', [PayslipController::class, 'view'])->name('payslips.view');
+    Route::get('/payslips/{payroll}/preview', [PayslipController::class, 'preview'])->name('payslips.preview');
+    Route::post('/payslips/{payroll}/email', [PayslipController::class, 'email'])->name('payslips.email');
 
     // Time & Attendance
     Route::get('/time', [TimeController::class, 'index'])->name('time.index');
