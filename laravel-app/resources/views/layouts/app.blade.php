@@ -17,7 +17,7 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-background flex">
         <!-- Desktop Sidebar -->
-        <aside class="hidden md:block w-64 bg-sidebar border-r border-border/50 fixed inset-y-0 left-0 z-50 shadow-xl">
+        <aside class="hidden md:flex md:flex-col w-64 bg-sidebar border-r border-border/50 fixed inset-y-0 left-0 z-50 shadow-xl h-screen">
             @include('layouts.sidebar')
         </aside>
 
