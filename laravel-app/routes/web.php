@@ -22,6 +22,7 @@ use App\Http\Controllers\AllowancesController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\LeaveManagementController;
 use App\Http\Controllers\BenefitsReportController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for DigitalOcean App Platform
@@ -32,10 +33,13 @@ Route::get('/health', function () {
     ]);
 });
 
-// Redirect root to dashboard or login
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+// Public landing pages
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/pricing', [LandingController::class, 'pricing'])->name('pricing');
+Route::get('/features', [LandingController::class, 'features'])->name('features');
+Route::get('/contact', [LandingController::class, 'contact'])->name('contact');
+Route::post('/contact', [LandingController::class, 'submitContact'])->name('contact.submit');
+Route::post('/request-demo', [LandingController::class, 'requestDemo'])->name('request-demo');
 
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
