@@ -23,6 +23,8 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\LeaveManagementController;
 use App\Http\Controllers\BenefitsReportController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\BulkActionController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for DigitalOcean App Platform
@@ -293,6 +295,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/leave-utilization', [BenefitsReportController::class, 'leaveUtilization'])->name('leave-utilization');
         Route::get('/employee/{employee}', [BenefitsReportController::class, 'employeeBenefits'])->name('employee');
         Route::get('/export/so2', [BenefitsReportController::class, 'exportSO2'])->name('export.so2');
+    });
+
+    // Exports
+    Route::prefix('export')->name('export.')->group(function () {
+        Route::get('/employees/csv', [ExportController::class, 'employeesCsv'])->name('employees.csv');
+        Route::get('/employees/pdf', [ExportController::class, 'employeesPdf'])->name('employees.pdf');
+        Route::get('/payroll/csv', [ExportController::class, 'payrollCsv'])->name('payroll.csv');
+        Route::get('/payroll/pdf', [ExportController::class, 'payrollPdf'])->name('payroll.pdf');
+        Route::get('/payslip/{payroll}', [ExportController::class, 'payslip'])->name('payslip');
+        Route::get('/leave/csv', [ExportController::class, 'leaveCsv'])->name('leave.csv');
+        Route::get('/time/csv', [ExportController::class, 'timeCsv'])->name('time.csv');
+        Route::get('/so2/{employee}', [ExportController::class, 'so2Form'])->name('so2');
+    });
+
+    // Bulk Actions
+    Route::prefix('bulk')->name('bulk.')->group(function () {
+        Route::post('/employees/departments', [BulkActionController::class, 'updateEmployeeDepartments'])->name('employees.departments');
+        Route::post('/leave/approve', [BulkActionController::class, 'approveLeaveRequests'])->name('leave.approve');
+        Route::post('/leave/reject', [BulkActionController::class, 'rejectLeaveRequests'])->name('leave.reject');
+        Route::post('/time/approve', [BulkActionController::class, 'approveTimeEntries'])->name('time.approve');
+        Route::post('/payroll/process', [BulkActionController::class, 'processPayroll'])->name('payroll.process');
+        Route::post('/payroll/finalize', [BulkActionController::class, 'finalizePayroll'])->name('payroll.finalize');
+        Route::post('/employees/import', [BulkActionController::class, 'importEmployees'])->name('employees.import');
+        Route::post('/delete', [BulkActionController::class, 'bulkDelete'])->name('delete');
     });
 
     // Profile
