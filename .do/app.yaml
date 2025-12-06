@@ -13,17 +13,11 @@ features:
 # Services
 services:
   - name: web
+    # IMPORTANT: Source directory for the Laravel app
+    source_dir: laravel-app
+
     # Use Dockerfile for custom build
     dockerfile_path: Dockerfile
-
-    # Or use buildpack (uncomment if not using Dockerfile)
-    # environment_slug: php
-    # build_command: |
-    #   composer install --no-dev --optimize-autoloader
-    #   npm ci && npm run build
-    #   php artisan config:cache
-    #   php artisan route:cache
-    #   php artisan view:cache
 
     github:
       repo: sirsmithdev/JAMHR
@@ -68,16 +62,13 @@ services:
         scope: RUN_TIME
         value: "${db.DATABASE_URL}"
 
-      # Session & Cache - Use Redis
+      # Session & Cache - Use database if Redis not available
       - key: SESSION_DRIVER
-        value: "redis"
+        value: "database"
       - key: CACHE_STORE
-        value: "redis"
+        value: "database"
       - key: QUEUE_CONNECTION
-        value: "redis"
-      - key: REDIS_URL
-        scope: RUN_TIME
-        value: "${redis.REDIS_URL}"
+        value: "database"
 
       # Logging
       - key: LOG_CHANNEL
@@ -106,18 +97,6 @@ services:
       - key: MAIL_FROM_NAME
         value: "JamHR"
 
-  # Worker for background jobs (optional - uncomment if needed)
-  # - name: worker
-  #   dockerfile_path: Dockerfile
-  #   github:
-  #     repo: sirsmithdev/JAMHR
-  #     branch: main
-  #   instance_count: 1
-  #   instance_size_slug: professional-xs
-  #   run_command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
-  #   envs:
-  #     # Copy same envs from web service
-
 # Database
 databases:
   - name: db
@@ -126,14 +105,11 @@ databases:
     size: db-s-1vcpu-1gb
     num_nodes: 1
 
-# Redis for caching and queues (uncomment if using managed Redis)
-# Note: DigitalOcean App Platform doesn't have native Redis support,
-# use DigitalOcean Managed Database Redis separately
-
 # Jobs (one-off commands like migrations)
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
+    source_dir: laravel-app
     dockerfile_path: Dockerfile
     github:
       repo: sirsmithdev/JAMHR
@@ -143,12 +119,3 @@ jobs:
       - key: DATABASE_URL
         scope: RUN_TIME
         value: "${db.DATABASE_URL}"
-
-# Static site for assets (optional - for CDN)
-# static_sites:
-#   - name: assets
-#     github:
-#       repo: sirsmithdev/JAMHR
-#       branch: main
-#     build_command: npm ci && npm run build
-#     output_dir: public/build
