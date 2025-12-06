@@ -24,6 +24,14 @@ use App\Http\Controllers\LeaveManagementController;
 use App\Http\Controllers\BenefitsReportController;
 use Illuminate\Support\Facades\Route;
 
+// Health check endpoint for DigitalOcean App Platform
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'timestamp' => now()->toIso8601String(),
+    ]);
+});
+
 // Redirect root to dashboard or login
 Route::get('/', function () {
     return redirect()->route('dashboard');
