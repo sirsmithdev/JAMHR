@@ -12,6 +12,9 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\KioskController;
 use App\Http\Controllers\SchedulingController;
 use App\Http\Controllers\ComplianceController;
+use App\Http\Controllers\HiringController;
+use App\Http\Controllers\TerminationController;
+use App\Http\Controllers\DisciplinaryController;
 use Illuminate\Support\Facades\Route;
 
 // Redirect root to dashboard or login
@@ -84,6 +87,56 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Compliance
     Route::get('/compliance', [ComplianceController::class, 'index'])->name('compliance.index');
+
+    // Hiring - Job Postings
+    Route::get('/hiring', [HiringController::class, 'index'])->name('hiring.index');
+    Route::get('/hiring/postings/create', [HiringController::class, 'create'])->name('hiring.postings.create');
+    Route::post('/hiring/postings', [HiringController::class, 'store'])->name('hiring.postings.store');
+    Route::get('/hiring/postings/{posting}', [HiringController::class, 'show'])->name('hiring.postings.show');
+    Route::get('/hiring/postings/{posting}/edit', [HiringController::class, 'edit'])->name('hiring.postings.edit');
+    Route::put('/hiring/postings/{posting}', [HiringController::class, 'update'])->name('hiring.postings.update');
+    Route::delete('/hiring/postings/{posting}', [HiringController::class, 'destroy'])->name('hiring.postings.destroy');
+
+    // Hiring - Applications
+    Route::get('/hiring/applications', [HiringController::class, 'applications'])->name('hiring.applications');
+    Route::get('/hiring/applications/create/{posting?}', [HiringController::class, 'applicationCreate'])->name('hiring.applications.create');
+    Route::post('/hiring/applications', [HiringController::class, 'applicationStore'])->name('hiring.applications.store');
+    Route::get('/hiring/applications/{application}', [HiringController::class, 'applicationShow'])->name('hiring.applications.show');
+    Route::put('/hiring/applications/{application}', [HiringController::class, 'applicationUpdate'])->name('hiring.applications.update');
+    Route::post('/hiring/applications/{application}/hire', [HiringController::class, 'hireApplication'])->name('hiring.applications.hire');
+
+    // Hiring - Interviews
+    Route::get('/hiring/interviews', [HiringController::class, 'interviews'])->name('hiring.interviews');
+    Route::get('/hiring/interviews/create/{application?}', [HiringController::class, 'interviewCreate'])->name('hiring.interviews.create');
+    Route::post('/hiring/interviews', [HiringController::class, 'interviewStore'])->name('hiring.interviews.store');
+    Route::get('/hiring/interviews/{interview}', [HiringController::class, 'interviewShow'])->name('hiring.interviews.show');
+    Route::put('/hiring/interviews/{interview}', [HiringController::class, 'interviewUpdate'])->name('hiring.interviews.update');
+
+    // Terminations
+    Route::get('/terminations', [TerminationController::class, 'index'])->name('terminations.index');
+    Route::get('/terminations/create', [TerminationController::class, 'create'])->name('terminations.create');
+    Route::post('/terminations', [TerminationController::class, 'store'])->name('terminations.store');
+    Route::get('/terminations/{termination}', [TerminationController::class, 'show'])->name('terminations.show');
+    Route::get('/terminations/{termination}/edit', [TerminationController::class, 'edit'])->name('terminations.edit');
+    Route::put('/terminations/{termination}', [TerminationController::class, 'update'])->name('terminations.update');
+    Route::delete('/terminations/{termination}', [TerminationController::class, 'destroy'])->name('terminations.destroy');
+    Route::post('/terminations/{termination}/checklist', [TerminationController::class, 'updateChecklist'])->name('terminations.checklist');
+    Route::get('/terminations/{termination}/exit-interview', [TerminationController::class, 'exitInterview'])->name('terminations.exit-interview');
+    Route::post('/terminations/{termination}/exit-interview', [TerminationController::class, 'storeExitInterview'])->name('terminations.exit-interview.store');
+    Route::get('/terminations/{termination}/calculate-pay', [TerminationController::class, 'calculateFinalPay'])->name('terminations.calculate-pay');
+
+    // Disciplinary Actions
+    Route::get('/disciplinary', [DisciplinaryController::class, 'index'])->name('disciplinary.index');
+    Route::get('/disciplinary/create/{employee?}', [DisciplinaryController::class, 'create'])->name('disciplinary.create');
+    Route::post('/disciplinary', [DisciplinaryController::class, 'store'])->name('disciplinary.store');
+    Route::get('/disciplinary/{disciplinary}', [DisciplinaryController::class, 'show'])->name('disciplinary.show');
+    Route::get('/disciplinary/{disciplinary}/edit', [DisciplinaryController::class, 'edit'])->name('disciplinary.edit');
+    Route::put('/disciplinary/{disciplinary}', [DisciplinaryController::class, 'update'])->name('disciplinary.update');
+    Route::delete('/disciplinary/{disciplinary}', [DisciplinaryController::class, 'destroy'])->name('disciplinary.destroy');
+    Route::post('/disciplinary/{disciplinary}/acknowledge', [DisciplinaryController::class, 'acknowledge'])->name('disciplinary.acknowledge');
+    Route::post('/disciplinary/{disciplinary}/response', [DisciplinaryController::class, 'addResponse'])->name('disciplinary.response');
+    Route::post('/disciplinary/{disciplinary}/pip-outcome', [DisciplinaryController::class, 'updatePipOutcome'])->name('disciplinary.pip-outcome');
+    Route::get('/disciplinary/employee/{employee}', [DisciplinaryController::class, 'employeeHistory'])->name('disciplinary.employee-history');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
