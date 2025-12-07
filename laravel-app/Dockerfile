@@ -55,6 +55,7 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     curl \
+    netcat-openbsd \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -123,8 +124,8 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Run as non-root user
-USER www-data
+# Note: We run as root because supervisord needs to start nginx/php-fpm
+# PHP-FPM and nginx handle their own user switching internally
 
 # Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
