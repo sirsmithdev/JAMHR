@@ -6,17 +6,13 @@ name: jamhr
 # Region - Choose the closest to Jamaica for lower latency
 region: nyc
 
-# Features
-features:
-  - buildpack-stack=ubuntu-22
-
 # Services
 services:
   - name: web
     # IMPORTANT: Source directory for the Laravel app
     source_dir: laravel-app
 
-    # Use Dockerfile for custom build
+    # Use Dockerfile for custom build (handles all npm/composer steps internally)
     dockerfile_path: Dockerfile
 
     github:
