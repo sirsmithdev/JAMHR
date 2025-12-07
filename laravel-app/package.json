@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "start": "echo 'Assets pre-built in Docker image'"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

@@ -27,14 +27,14 @@ services:
     instance_count: 1
     instance_size_slug: professional-xs
 
-    # Health check
+    # Health check - increased timeout for Laravel boot
     health_check:
       http_path: /health
-      initial_delay_seconds: 30
-      period_seconds: 10
-      timeout_seconds: 5
+      initial_delay_seconds: 60
+      period_seconds: 15
+      timeout_seconds: 10
       success_threshold: 1
-      failure_threshold: 3
+      failure_threshold: 5
 
     # Environment variables
     envs:
@@ -58,13 +58,13 @@ services:
         scope: RUN_TIME
         value: "${db.DATABASE_URL}"
 
-      # Session & Cache - Use database if Redis not available
+      # Session & Cache - Use file driver for simplicity (no DB dependency on boot)
       - key: SESSION_DRIVER
-        value: "database"
+        value: "file"
       - key: CACHE_STORE
-        value: "database"
+        value: "file"
       - key: QUEUE_CONNECTION
-        value: "database"
+        value: "sync"
 
       # Logging
       - key: LOG_CHANNEL
@@ -112,6 +112,13 @@ jobs:
       branch: main
     run_command: php artisan migrate --force
     envs:
+      - key: APP_ENV
+        value: "production"
+      - key: APP_KEY
+        value: "${APP_KEY}"
+        type: SECRET
       - key: DATABASE_URL
         scope: RUN_TIME
         value: "${db.DATABASE_URL}"
+      - key: DB_CONNECTION
+        value: "pgsql"
