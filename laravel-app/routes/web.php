@@ -25,6 +25,7 @@ use App\Http\Controllers\BenefitsReportController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\BulkActionController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for DigitalOcean App Platform
@@ -319,6 +320,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/payroll/finalize', [BulkActionController::class, 'finalizePayroll'])->name('payroll.finalize');
         Route::post('/employees/import', [BulkActionController::class, 'importEmployees'])->name('employees.import');
         Route::post('/delete', [BulkActionController::class, 'bulkDelete'])->name('delete');
+    });
+
+    // Settings (Admin only)
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', [SettingsController::class, 'index'])->name('index');
+        Route::get('/company', [SettingsController::class, 'company'])->name('company');
+        Route::put('/company', [SettingsController::class, 'updateCompany'])->name('company.update');
+        Route::get('/payroll', [SettingsController::class, 'payroll'])->name('payroll');
+        Route::put('/payroll', [SettingsController::class, 'updatePayroll'])->name('payroll.update');
+        Route::get('/leave', [SettingsController::class, 'leave'])->name('leave');
+        Route::put('/leave', [SettingsController::class, 'updateLeave'])->name('leave.update');
+        Route::get('/notifications', [SettingsController::class, 'notifications'])->name('notifications');
+        Route::put('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
+        Route::get('/system', [SettingsController::class, 'system'])->name('system');
+        Route::put('/system', [SettingsController::class, 'updateSystem'])->name('system.update');
+        Route::post('/clear-cache', [SettingsController::class, 'clearCache'])->name('clear-cache');
+        Route::get('/export', [SettingsController::class, 'export'])->name('export');
+        Route::post('/import', [SettingsController::class, 'import'])->name('import');
     });
 
     // Profile
