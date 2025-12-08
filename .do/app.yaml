@@ -37,12 +37,12 @@ services:
       - key: APP_KEY
         value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
-      # Database - Use DigitalOcean Managed Database
+      # Database - Set DATABASE_URL in DigitalOcean dashboard
       - key: DB_CONNECTION
         value: "pgsql"
       - key: DATABASE_URL
-        scope: RUN_TIME
-        value: "${db.DATABASE_URL}"
+        value: "${DATABASE_URL}"
+        type: SECRET
 
       # Session & Cache - Use file driver for simplicity (no DB dependency on boot)
       - key: SESSION_DRIVER
@@ -78,31 +78,3 @@ services:
         type: GENERAL
       - key: MAIL_FROM_NAME
         value: "JamHR"
-
-# Database
-databases:
-  - name: db
-    engine: PG
-    version: "16"
-    size: db-s-1vcpu-1gb
-    num_nodes: 1
-
-# Jobs (one-off commands like migrations)
-jobs:
-  - name: migrate
-    kind: PRE_DEPLOY
-    dockerfile_path: Dockerfile
-    github:
-      repo: sirsmithdev/JAMHR
-      branch: main
-    run_command: php artisan migrate --force
-    envs:
-      - key: APP_ENV
-        value: "production"
-      - key: APP_KEY
-        value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
-      - key: DATABASE_URL
-        scope: RUN_TIME
-        value: "${db.DATABASE_URL}"
-      - key: DB_CONNECTION
-        value: "pgsql"
