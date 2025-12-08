@@ -51,11 +51,23 @@ RUN composer dump-autoload --optimize --no-dev
 FROM php:8.4-fpm-alpine AS production
 
 # Install system dependencies
+# Runtime libraries (kept permanently)
 RUN apk add --no-cache \
     nginx \
     supervisor \
     curl \
     netcat-openbsd \
+    libpng \
+    libjpeg-turbo \
+    freetype \
+    libzip \
+    icu-libs \
+    libpq \
+    oniguruma \
+    && mkdir -p /run/nginx
+
+# Install build dependencies, compile PHP extensions, then remove build deps
+RUN apk add --no-cache --virtual .build-deps \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
@@ -76,8 +88,7 @@ RUN apk add --no-cache \
         zip \
         intl \
         opcache \
-    && apk del --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
-    && mkdir -p /run/nginx
+    && apk del .build-deps
 
 # Install Redis extension
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
