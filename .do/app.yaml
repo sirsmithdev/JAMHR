@@ -34,6 +34,8 @@ services:
         value: "true"
       - key: APP_URL
         value: "https://humanhr-app-jjlum.ondigitalocean.app"
+      - key: ASSET_URL
+        value: "https://humanhr-app-jjlum.ondigitalocean.app"
       - key: APP_KEY
         value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
