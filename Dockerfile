@@ -76,7 +76,8 @@ RUN apk add --no-cache \
         zip \
         intl \
         opcache \
-    && apk del --no-cache libpng-dev libjpeg-turbo-dev freetype-dev
+    && apk del --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
+    && mkdir -p /run/nginx
 
 # Install Redis extension
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
