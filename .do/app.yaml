@@ -27,15 +27,6 @@ services:
     instance_count: 1
     instance_size_slug: professional-xs
 
-    # Health check - increased timeout for Laravel boot
-    health_check:
-      http_path: /health
-      initial_delay_seconds: 60
-      period_seconds: 15
-      timeout_seconds: 10
-      success_threshold: 1
-      failure_threshold: 5
-
     # Environment variables
     envs:
       - key: APP_NAME
