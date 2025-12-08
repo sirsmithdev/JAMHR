@@ -335,6 +335,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
         Route::get('/system', [SettingsController::class, 'system'])->name('system');
         Route::put('/system', [SettingsController::class, 'updateSystem'])->name('system.update');
+        Route::get('/kiosk', [SettingsController::class, 'kiosk'])->name('kiosk');
+        Route::put('/kiosk', [SettingsController::class, 'updateKiosk'])->name('kiosk.update');
         Route::post('/clear-cache', [SettingsController::class, 'clearCache'])->name('clear-cache');
         Route::get('/export', [SettingsController::class, 'export'])->name('export');
         Route::post('/import', [SettingsController::class, 'import'])->name('import');
@@ -348,6 +350,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Kiosk (public for clock in/out)
 Route::get('/kiosk', [KioskController::class, 'index'])->name('kiosk.index');
+Route::post('/kiosk/verify-pin', [KioskController::class, 'verifyPin'])->name('kiosk.verify-pin');
 Route::post('/kiosk/clock-in', [KioskController::class, 'clockIn'])->name('kiosk.clock-in');
 Route::post('/kiosk/clock-out', [KioskController::class, 'clockOut'])->name('kiosk.clock-out');
 Route::post('/kiosk/start-break', [KioskController::class, 'startBreak'])->name('kiosk.start-break');

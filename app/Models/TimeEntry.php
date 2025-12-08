@@ -14,11 +14,15 @@ class TimeEntry extends Model
         'employee_id',
         'date',
         'clock_in',
+        'clock_in_photo',
         'clock_out',
+        'clock_out_photo',
         'break_start',
         'break_end',
         'total_hours',
         'status',
+        'ip_address',
+        'device_info',
     ];
 
     protected function casts(): array

@@ -36,5 +36,12 @@
             </svg>
             System
         </a>
+        <a href="{{ route('settings.kiosk') }}"
+           class="px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 {{ ($activeTab ?? '') === 'kiosk' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300' }}">
+            <svg class="h-5 w-5 inline-block mr-2 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Time Kiosk
+        </a>
     </nav>
 </div>

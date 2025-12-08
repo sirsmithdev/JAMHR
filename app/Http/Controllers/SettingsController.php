@@ -271,6 +271,76 @@ class SettingsController extends Controller
     }
 
     /**
+     * Show kiosk settings
+     */
+    public function kiosk()
+    {
+        $settings = Setting::getGroup('kiosk');
+
+        // Set defaults if not configured
+        $defaults = [
+            'require_photo' => true,
+            'photo_quality' => 'medium',
+            'work_start_hour' => 9,
+            'overtime_threshold' => 8,
+            'allow_multiple_clockins' => false,
+            'show_employee_photo' => true,
+            'title' => 'Employee Time Clock',
+            'subtitle' => 'Enter your PIN to clock in or out',
+            'enable_breaks' => true,
+            'camera_facing' => 'user',
+            'photo_retention_days' => 90,
+            'allow_manual_entry' => true,
+        ];
+
+        foreach ($defaults as $key => $value) {
+            if (!isset($settings[$key])) {
+                $settings[$key] = $value;
+            }
+        }
+
+        return view('settings.kiosk', [
+            'settings' => $settings,
+            'activeTab' => 'kiosk',
+        ]);
+    }
+
+    /**
+     * Update kiosk settings
+     */
+    public function updateKiosk(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:100',
+            'subtitle' => 'nullable|string|max:200',
+            'require_photo' => 'nullable|boolean',
+            'photo_quality' => ['required', Rule::in(['low', 'medium', 'high'])],
+            'camera_facing' => ['required', Rule::in(['user', 'environment'])],
+            'work_start_hour' => 'required|integer|min:0|max:23',
+            'overtime_threshold' => 'required|numeric|min:1|max:24',
+            'allow_multiple_clockins' => 'nullable|boolean',
+            'enable_breaks' => 'nullable|boolean',
+            'show_employee_photo' => 'nullable|boolean',
+            'photo_retention_days' => 'required|integer|min:7|max:365',
+            'allow_manual_entry' => 'nullable|boolean',
+        ]);
+
+        $booleanFields = [
+            'require_photo', 'allow_multiple_clockins', 'enable_breaks',
+            'show_employee_photo', 'allow_manual_entry',
+        ];
+
+        foreach ($booleanFields as $field) {
+            $validated[$field] = $request->boolean($field) ? 'true' : 'false';
+        }
+
+        Setting::setMany('kiosk', $validated);
+
+        return redirect()->route('settings.kiosk')
+            ->with('success', 'Kiosk settings updated successfully.');
+    }
+
+    /**
      * Get Jamaican parishes
      */
     private function getJamaicanParishes(): array
