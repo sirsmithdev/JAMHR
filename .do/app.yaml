@@ -37,9 +37,9 @@ services:
       - key: APP_KEY
         value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
-      # Database - Set these in DigitalOcean dashboard
+      # Database - PostgreSQL 17
       - key: DB_CONNECTION
-        value: "mysql"
+        value: "pgsql"
       - key: DB_HOST
         value: "${DB_HOST}"
         type: GENERAL
