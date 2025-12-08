@@ -9,9 +9,6 @@ region: nyc
 # Services
 services:
   - name: web
-    # IMPORTANT: Source directory for the Laravel app
-    source_dir: laravel-app
-
     # Use Dockerfile for custom build (handles all npm/composer steps internally)
     dockerfile_path: Dockerfile
 
@@ -96,7 +93,6 @@ databases:
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
-    source_dir: laravel-app
     dockerfile_path: Dockerfile
     github:
       repo: sirsmithdev/JAMHR
