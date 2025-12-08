@@ -31,13 +31,11 @@ services:
       - key: APP_ENV
         value: "production"
       - key: APP_DEBUG
-        value: "false"
+        value: "true"
       - key: APP_URL
-        value: "${APP_URL}"
-        type: GENERAL
+        value: "https://humanhr-app-jjlum.ondigitalocean.app"
       - key: APP_KEY
-        value: "${APP_KEY}"
-        type: SECRET
+        value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
       # Database - Use DigitalOcean Managed Database
       - key: DB_CONNECTION
@@ -102,8 +100,7 @@ jobs:
       - key: APP_ENV
         value: "production"
       - key: APP_KEY
-        value: "${APP_KEY}"
-        type: SECRET
+        value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
       - key: DATABASE_URL
         scope: RUN_TIME
         value: "${db.DATABASE_URL}"
