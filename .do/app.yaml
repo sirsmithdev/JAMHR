@@ -37,11 +37,23 @@ services:
       - key: APP_KEY
         value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
-      # Database - Set DATABASE_URL in DigitalOcean dashboard
+      # Database - Set these in DigitalOcean dashboard
       - key: DB_CONNECTION
         value: "mysql"
-      - key: DATABASE_URL
-        value: "${DATABASE_URL}"
+      - key: DB_HOST
+        value: "${DB_HOST}"
+        type: GENERAL
+      - key: DB_PORT
+        value: "${DB_PORT}"
+        type: GENERAL
+      - key: DB_DATABASE
+        value: "${DB_DATABASE}"
+        type: GENERAL
+      - key: DB_USERNAME
+        value: "${DB_USERNAME}"
+        type: SECRET
+      - key: DB_PASSWORD
+        value: "${DB_PASSWORD}"
         type: SECRET
 
       # Session & Cache - Use file driver for simplicity (no DB dependency on boot)
