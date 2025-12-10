@@ -26,6 +26,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\BulkActionController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\IntegrationsController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for DigitalOcean App Platform
@@ -337,6 +338,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/system', [SettingsController::class, 'updateSystem'])->name('system.update');
         Route::get('/kiosk', [SettingsController::class, 'kiosk'])->name('kiosk');
         Route::put('/kiosk', [SettingsController::class, 'updateKiosk'])->name('kiosk.update');
+        Route::get('/integrations', [IntegrationsController::class, 'index'])->name('integrations');
         Route::post('/clear-cache', [SettingsController::class, 'clearCache'])->name('clear-cache');
         Route::get('/export', [SettingsController::class, 'export'])->name('export');
         Route::post('/import', [SettingsController::class, 'import'])->name('import');
@@ -346,6 +348,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Integrations OAuth Routes
+    Route::prefix('integrations')->name('integrations.')->group(function () {
+        // Google Workspace
+        Route::get('/google/redirect', [IntegrationsController::class, 'googleRedirect'])->name('google.redirect');
+        Route::get('/google/callback', [IntegrationsController::class, 'googleCallback'])->name('google.callback');
+        Route::delete('/google/disconnect', [IntegrationsController::class, 'googleDisconnect'])->name('google.disconnect');
+        Route::get('/google/test-calendar', [IntegrationsController::class, 'googleTestCalendar'])->name('google.test-calendar');
+
+        // Microsoft (placeholder)
+        Route::get('/microsoft/redirect', [IntegrationsController::class, 'microsoftRedirect'])->name('microsoft.redirect');
+        Route::get('/microsoft/callback', [IntegrationsController::class, 'microsoftCallback'])->name('microsoft.callback');
+        Route::delete('/microsoft/disconnect', [IntegrationsController::class, 'microsoftDisconnect'])->name('microsoft.disconnect');
+    });
 });
 
 // Kiosk (public for clock in/out)
