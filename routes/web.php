@@ -56,7 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Payroll
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
     Route::get('/payroll/create', [PayrollController::class, 'create'])->name('payroll.create');
+    Route::get('/payroll/batch', [PayrollController::class, 'batchCreate'])->name('payroll.batch');
+    Route::post('/payroll/batch', [PayrollController::class, 'batchStore'])->name('payroll.batch.store');
     Route::post('/payroll', [PayrollController::class, 'store'])->name('payroll.store');
+    Route::get('/payroll/employee/{employee}', [PayrollController::class, 'getEmployeeDetails'])->name('payroll.employee-details');
     Route::get('/payroll/{payroll}', [PayrollController::class, 'show'])->name('payroll.show');
     Route::post('/payroll/{payroll}/finalize', [PayrollController::class, 'finalize'])->name('payroll.finalize');
     Route::post('/payroll/{payroll}/paid', [PayrollController::class, 'markPaid'])->name('payroll.paid');

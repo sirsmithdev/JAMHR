@@ -14,6 +14,12 @@ class Payroll extends Model
         'employee_id',
         'period_start',
         'period_end',
+        'pay_frequency',
+        'pay_type',
+        'hours_worked',
+        'hourly_rate_used',
+        'regular_hours',
+        'regular_pay',
         'gross_pay',
         'basic_salary',
         'overtime_pay',
@@ -32,6 +38,7 @@ class Payroll extends Model
         'income_tax',
         'loan_deduction',
         'other_deductions',
+        'calculation_breakdown',
         'net_pay',
         'status',
         'pay_date',
@@ -46,9 +53,14 @@ class Payroll extends Model
             'period_start' => 'date',
             'period_end' => 'date',
             'pay_date' => 'date',
+            'hours_worked' => 'decimal:2',
+            'hourly_rate_used' => 'decimal:2',
+            'regular_hours' => 'decimal:2',
+            'regular_pay' => 'decimal:2',
             'gross_pay' => 'decimal:2',
             'basic_salary' => 'decimal:2',
             'overtime_pay' => 'decimal:2',
+            'overtime_hours' => 'decimal:2',
             'allowances' => 'decimal:2',
             'bonus' => 'decimal:2',
             'commission' => 'decimal:2',
@@ -63,6 +75,7 @@ class Payroll extends Model
             'income_tax' => 'decimal:2',
             'loan_deduction' => 'decimal:2',
             'other_deductions' => 'decimal:2',
+            'calculation_breakdown' => 'array',
             'net_pay' => 'decimal:2',
             'payslip_sent' => 'boolean',
             'payslip_sent_at' => 'datetime',
@@ -133,12 +146,12 @@ class Payroll extends Model
 
     public function getTotalEmployeeDeductionsAttribute(): float
     {
-        return $this->nht_employee + $this->nis_employee + $this->ed_tax_employee + $this->income_tax;
+        return ($this->nht_employee ?? 0) + ($this->nis_employee ?? 0) + ($this->ed_tax_employee ?? 0) + ($this->income_tax ?? 0);
     }
 
     public function getTotalEmployerContributionsAttribute(): float
     {
-        return $this->nht_employer + $this->nis_employer + $this->ed_tax_employer + $this->heart_employer;
+        return ($this->nht_employer ?? 0) + ($this->nis_employer ?? 0) + ($this->ed_tax_employer ?? 0) + ($this->heart_employer ?? 0);
     }
 
     public function getStatusBadgeClassAttribute(): string
@@ -149,5 +162,93 @@ class Payroll extends Model
             'paid' => 'bg-emerald-100 text-emerald-800',
             default => 'bg-gray-100 text-gray-800',
         };
+    }
+
+    /**
+     * Get pay frequency label
+     */
+    public function getPayFrequencyLabelAttribute(): string
+    {
+        return match ($this->pay_frequency) {
+            'fortnightly' => 'Fortnightly',
+            'monthly' => 'Monthly',
+            default => 'Monthly',
+        };
+    }
+
+    /**
+     * Get pay type label
+     */
+    public function getPayTypeLabelAttribute(): string
+    {
+        return match ($this->pay_type) {
+            'salaried' => 'Salaried',
+            'hourly_from_salary' => 'Hourly (from Salary)',
+            'hourly_fixed' => 'Flexi-Hour',
+            default => 'Salaried',
+        };
+    }
+
+    /**
+     * Check if this payroll was calculated hourly
+     */
+    public function isHourlyPayroll(): bool
+    {
+        return in_array($this->pay_type, ['hourly_from_salary', 'hourly_fixed']);
+    }
+
+    /**
+     * Get the total earnings (before deductions)
+     */
+    public function getTotalEarningsAttribute(): float
+    {
+        return ($this->basic_salary ?? $this->gross_pay ?? 0)
+            + ($this->overtime_pay ?? 0)
+            + ($this->allowances ?? 0)
+            + ($this->bonus ?? 0)
+            + ($this->commission ?? 0)
+            + ($this->other_earnings ?? 0);
+    }
+
+    /**
+     * Get period description
+     */
+    public function getPeriodDescriptionAttribute(): string
+    {
+        $start = $this->period_start->format('M j');
+        $end = $this->period_end->format('M j, Y');
+        return "{$start} - {$end}";
+    }
+
+    /**
+     * Scope for a specific pay frequency
+     */
+    public function scopeForFrequency($query, string $frequency)
+    {
+        return $query->where('pay_frequency', $frequency);
+    }
+
+    /**
+     * Scope for draft payrolls
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', 'draft');
+    }
+
+    /**
+     * Scope for finalized payrolls
+     */
+    public function scopeFinalized($query)
+    {
+        return $query->where('status', 'finalized');
+    }
+
+    /**
+     * Scope for paid payrolls
+     */
+    public function scopePaid($query)
+    {
+        return $query->where('status', 'paid');
     }
 }
