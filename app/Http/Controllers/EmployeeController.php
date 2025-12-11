@@ -42,6 +42,10 @@ class EmployeeController extends Controller
             'start_date' => 'nullable|date',
             'salary_annual' => 'nullable|numeric|min:0',
             'hourly_rate' => 'nullable|numeric|min:0',
+            'pay_frequency' => 'nullable|in:fortnightly,monthly',
+            'pay_type' => 'nullable|in:salaried,hourly_from_salary,hourly_fixed',
+            'flexi_hourly_rate' => 'nullable|numeric|min:0',
+            'standard_hours_per_period' => 'nullable|numeric|min:0',
         ]);
 
         // Create user account
@@ -64,6 +68,10 @@ class EmployeeController extends Controller
             'start_date' => $validated['start_date'],
             'salary_annual' => $validated['salary_annual'],
             'hourly_rate' => $validated['hourly_rate'],
+            'pay_frequency' => $validated['pay_frequency'] ?? 'monthly',
+            'pay_type' => $validated['pay_type'] ?? 'salaried',
+            'flexi_hourly_rate' => $validated['flexi_hourly_rate'],
+            'standard_hours_per_period' => $validated['standard_hours_per_period'],
             'pin' => str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT),
         ]);
 
@@ -97,6 +105,10 @@ class EmployeeController extends Controller
             'start_date' => 'nullable|date',
             'salary_annual' => 'nullable|numeric|min:0',
             'hourly_rate' => 'nullable|numeric|min:0',
+            'pay_frequency' => 'nullable|in:fortnightly,monthly',
+            'pay_type' => 'nullable|in:salaried,hourly_from_salary,hourly_fixed',
+            'flexi_hourly_rate' => 'nullable|numeric|min:0',
+            'standard_hours_per_period' => 'nullable|numeric|min:0',
         ]);
 
         // Update user
@@ -117,6 +129,10 @@ class EmployeeController extends Controller
             'start_date' => $validated['start_date'],
             'salary_annual' => $validated['salary_annual'],
             'hourly_rate' => $validated['hourly_rate'],
+            'pay_frequency' => $validated['pay_frequency'] ?? 'monthly',
+            'pay_type' => $validated['pay_type'] ?? 'salaried',
+            'flexi_hourly_rate' => $validated['flexi_hourly_rate'],
+            'standard_hours_per_period' => $validated['standard_hours_per_period'],
         ]);
 
         return redirect()->route('employees.index')

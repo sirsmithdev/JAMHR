@@ -26,6 +26,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\BulkActionController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\IntegrationsController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint for DigitalOcean App Platform
@@ -55,7 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Payroll
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
     Route::get('/payroll/create', [PayrollController::class, 'create'])->name('payroll.create');
+    Route::get('/payroll/batch', [PayrollController::class, 'batchCreate'])->name('payroll.batch');
+    Route::post('/payroll/batch', [PayrollController::class, 'batchStore'])->name('payroll.batch.store');
     Route::post('/payroll', [PayrollController::class, 'store'])->name('payroll.store');
+    Route::get('/payroll/employee/{employee}', [PayrollController::class, 'getEmployeeDetails'])->name('payroll.employee-details');
     Route::get('/payroll/{payroll}', [PayrollController::class, 'show'])->name('payroll.show');
     Route::post('/payroll/{payroll}/finalize', [PayrollController::class, 'finalize'])->name('payroll.finalize');
     Route::post('/payroll/{payroll}/paid', [PayrollController::class, 'markPaid'])->name('payroll.paid');
@@ -335,6 +339,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
         Route::get('/system', [SettingsController::class, 'system'])->name('system');
         Route::put('/system', [SettingsController::class, 'updateSystem'])->name('system.update');
+        Route::get('/kiosk', [SettingsController::class, 'kiosk'])->name('kiosk');
+        Route::put('/kiosk', [SettingsController::class, 'updateKiosk'])->name('kiosk.update');
+        Route::get('/integrations', [IntegrationsController::class, 'index'])->name('integrations');
         Route::post('/clear-cache', [SettingsController::class, 'clearCache'])->name('clear-cache');
         Route::get('/export', [SettingsController::class, 'export'])->name('export');
         Route::post('/import', [SettingsController::class, 'import'])->name('import');
@@ -344,10 +351,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Integrations OAuth Routes
+    Route::prefix('integrations')->name('integrations.')->group(function () {
+        // Google Workspace
+        Route::get('/google/redirect', [IntegrationsController::class, 'googleRedirect'])->name('google.redirect');
+        Route::get('/google/callback', [IntegrationsController::class, 'googleCallback'])->name('google.callback');
+        Route::delete('/google/disconnect', [IntegrationsController::class, 'googleDisconnect'])->name('google.disconnect');
+        Route::get('/google/test-calendar', [IntegrationsController::class, 'googleTestCalendar'])->name('google.test-calendar');
+
+        // Microsoft (placeholder)
+        Route::get('/microsoft/redirect', [IntegrationsController::class, 'microsoftRedirect'])->name('microsoft.redirect');
+        Route::get('/microsoft/callback', [IntegrationsController::class, 'microsoftCallback'])->name('microsoft.callback');
+        Route::delete('/microsoft/disconnect', [IntegrationsController::class, 'microsoftDisconnect'])->name('microsoft.disconnect');
+    });
 });
 
 // Kiosk (public for clock in/out)
 Route::get('/kiosk', [KioskController::class, 'index'])->name('kiosk.index');
+Route::post('/kiosk/verify-pin', [KioskController::class, 'verifyPin'])->name('kiosk.verify-pin');
 Route::post('/kiosk/clock-in', [KioskController::class, 'clockIn'])->name('kiosk.clock-in');
 Route::post('/kiosk/clock-out', [KioskController::class, 'clockOut'])->name('kiosk.clock-out');
 Route::post('/kiosk/start-break', [KioskController::class, 'startBreak'])->name('kiosk.start-break');

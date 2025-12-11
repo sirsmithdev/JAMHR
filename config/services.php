@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect_uri' => env('GOOGLE_REDIRECT_URI', '/integrations/google/callback'),
+    ],
+
+    'microsoft' => [
+        'client_id' => env('MICROSOFT_CLIENT_ID'),
+        'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
+        'redirect_uri' => env('MICROSOFT_REDIRECT_URI', '/integrations/microsoft/callback'),
+        'tenant_id' => env('MICROSOFT_TENANT_ID', 'common'),
+    ],
+
 ];

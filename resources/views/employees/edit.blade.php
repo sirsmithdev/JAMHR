@@ -71,10 +71,92 @@
                 </div>
             </div>
 
+            <!-- Pay Settings Section -->
+            <div class="border-t border-border pt-6 mt-6">
+                <h3 class="text-lg font-medium text-foreground mb-4">Pay Settings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="pay_frequency" class="block text-sm font-medium text-foreground">Pay Frequency</label>
+                        <select name="pay_frequency" id="pay_frequency" class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <option value="monthly" {{ old('pay_frequency', $employee->pay_frequency) === 'monthly' ? 'selected' : '' }}>Monthly</option>
+                            <option value="fortnightly" {{ old('pay_frequency', $employee->pay_frequency) === 'fortnightly' ? 'selected' : '' }}>Fortnightly</option>
+                        </select>
+                        <p class="text-xs text-muted-foreground">How often the employee is paid</p>
+                        @error('pay_frequency') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="pay_type" class="block text-sm font-medium text-foreground">Pay Type</label>
+                        <select name="pay_type" id="pay_type" class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" onchange="toggleFlexiRateField()">
+                            <option value="salaried" {{ old('pay_type', $employee->pay_type) === 'salaried' ? 'selected' : '' }}>Salaried (Fixed Amount)</option>
+                            <option value="hourly_from_salary" {{ old('pay_type', $employee->pay_type) === 'hourly_from_salary' ? 'selected' : '' }}>Hourly (Calculated from Salary)</option>
+                            <option value="hourly_fixed" {{ old('pay_type', $employee->pay_type) === 'hourly_fixed' ? 'selected' : '' }}>Flexi-Hour (Fixed Hourly Rate)</option>
+                        </select>
+                        <p class="text-xs text-muted-foreground">How the employee's pay is calculated</p>
+                        @error('pay_type') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2" id="flexi_rate_container" style="display: none;">
+                        <label for="flexi_hourly_rate" class="block text-sm font-medium text-foreground">Flexi Hourly Rate (JMD)</label>
+                        <input type="number" name="flexi_hourly_rate" id="flexi_hourly_rate" value="{{ old('flexi_hourly_rate', $employee->flexi_hourly_rate) }}" step="0.01" class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        <p class="text-xs text-muted-foreground">Fixed hourly rate for flexi-hour employees</p>
+                        @error('flexi_hourly_rate') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="standard_hours_per_period" class="block text-sm font-medium text-foreground">Standard Hours Per Period</label>
+                        <input type="number" name="standard_hours_per_period" id="standard_hours_per_period" value="{{ old('standard_hours_per_period', $employee->standard_hours_per_period) }}" step="0.01" placeholder="Auto-calculated if left blank" class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        <p class="text-xs text-muted-foreground">Monthly: 173.33 hrs | Fortnightly: 80 hrs (default)</p>
+                        @error('standard_hours_per_period') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <!-- Pay Summary -->
+                @if($employee->salary_annual)
+                <div class="mt-6 p-4 bg-muted/50 rounded-lg">
+                    <h4 class="text-sm font-medium text-foreground mb-2">Calculated Pay Summary</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <span class="text-muted-foreground">Monthly Salary:</span>
+                            <p class="font-medium">${{ number_format($employee->monthly_salary, 2) }}</p>
+                        </div>
+                        <div>
+                            <span class="text-muted-foreground">Fortnightly Salary:</span>
+                            <p class="font-medium">${{ number_format($employee->fortnightly_salary, 2) }}</p>
+                        </div>
+                        <div>
+                            <span class="text-muted-foreground">Effective Hourly Rate:</span>
+                            <p class="font-medium">${{ number_format($employee->effective_hourly_rate, 2) }}/hr</p>
+                        </div>
+                        <div>
+                            <span class="text-muted-foreground">Standard Hours:</span>
+                            <p class="font-medium">{{ $employee->getDefaultStandardHours() }} hrs/{{ $employee->pay_frequency === 'fortnightly' ? 'fortnight' : 'month' }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+
             <div class="flex justify-end gap-4 pt-4 border-t border-border">
                 <a href="{{ route('employees.index') }}" class="px-4 py-2 border border-border rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors">Cancel</a>
                 <button type="submit" class="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-primary/90 transition-colors">Save Changes</button>
             </div>
         </form>
     </div>
+
+    <script>
+        function toggleFlexiRateField() {
+            const payType = document.getElementById('pay_type').value;
+            const flexiContainer = document.getElementById('flexi_rate_container');
+
+            if (payType === 'hourly_fixed') {
+                flexiContainer.style.display = 'block';
+            } else {
+                flexiContainer.style.display = 'none';
+            }
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', toggleFlexiRateField);
+    </script>
 </x-app-layout>

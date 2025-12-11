@@ -31,7 +31,7 @@ services:
       - key: APP_ENV
         value: "production"
       - key: APP_DEBUG
-        value: "true"
+        value: "false"
       - key: APP_URL
         value: "https://humanhr-app-jjlum.ondigitalocean.app"
       - key: ASSET_URL
@@ -39,24 +39,23 @@ services:
       - key: APP_KEY
         value: "base64:1ZvKiCkxZPNVYpbyPkwErLL/e4qPmfKGkLgwwGJkJZw="
 
-      # Database - PostgreSQL 17
+      # Database - PostgreSQL 17 (DigitalOcean Managed Database)
+      # Set these values in App Platform dashboard or use component binding
       - key: DB_CONNECTION
         value: "pgsql"
       - key: DB_HOST
-        value: "${DB_HOST}"
-        type: GENERAL
+        value: "app-b23dc1dd-f9e4-43ad-ba29-7f9201637b0a-do-user-30141255-0.e.db.ondigitalocean.com"
       - key: DB_PORT
-        value: "${DB_PORT}"
-        type: GENERAL
+        value: "25060"
       - key: DB_DATABASE
-        value: "${DB_DATABASE}"
-        type: GENERAL
+        value: "dev-db-447484"
       - key: DB_USERNAME
-        value: "${DB_USERNAME}"
-        type: SECRET
+        value: "dev-db-447484"
       - key: DB_PASSWORD
-        value: "${DB_PASSWORD}"
         type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: DB_SSLMODE
+        value: "require"
 
       # Session & Cache - Use file driver for simplicity (no DB dependency on boot)
       - key: SESSION_DRIVER
